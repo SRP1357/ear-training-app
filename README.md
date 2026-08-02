@@ -4,7 +4,9 @@ A free, local-only ear training site for musicians.
 
 No accounts. No ads. No analytics. Audio stays in your browser.
 
-**Live:** https://SRP1357.github.io/ear-training-app/
+### 🌐 Try it here
+
+**https://srp1357.github.io/ear-training-app/**
 
 ## Modes
 
