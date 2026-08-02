@@ -4,6 +4,9 @@ A free, local-only ear training app for musicians.
 
 No accounts. No ads. No analytics. Nothing leaves the device.
 
+**Source available — all rights reserved.**  
+Copyright (c) 2026 Suhas. You may view this code, but you may not use it to build a product, redistribute it, or create derivatives without permission. See [LICENSE](./LICENSE).
+
 ## Modes
 
 **Vocabulary**
