@@ -3,14 +3,151 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ear Training — Free Interval, Chord &amp; Scale Practice</title>
     <meta
       name="description"
-      content="Free, local-only ear training. Intervals, chords, scales, and in-key hearing."
+      content="Free ear training in your browser — intervals, chords, scales, and in-key drills. No accounts, no tracking. Audio stays on your device."
     />
-    <title>Ear Training</title>
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="author" content="Ear Training" />
+    <meta name="theme-color" content="#1f6b5c" />
+    <meta name="color-scheme" content="light" />
+    <link rel="canonical" href="https://srp1357.github.io/ear-training-app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Ear Training" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      property="og:title"
+      content="Ear Training — Free Interval, Chord &amp; Scale Practice"
+    />
+    <meta
+      property="og:description"
+      content="Free ear training in your browser — intervals, chords, scales, and in-key drills. No accounts, no tracking. Audio stays on your device."
+    />
+    <meta property="og:url" content="https://srp1357.github.io/ear-training-app/" />
+    <meta
+      property="og:image"
+      content="https://srp1357.github.io/ear-training-app/og-image.png"
+    />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1536" />
+    <meta property="og:image:height" content="864" />
+    <meta
+      property="og:image:alt"
+      content="Ear training — free local practice for intervals, chords, and scales"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Ear Training — Free Interval, Chord &amp; Scale Practice"
+    />
+    <meta
+      name="twitter:description"
+      content="Free ear training in your browser — intervals, chords, scales, and in-key drills. No accounts, no tracking."
+    />
+    <meta
+      name="twitter:image"
+      content="https://srp1357.github.io/ear-training-app/og-image.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Ear training — free local practice for intervals, chords, and scales"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://srp1357.github.io/ear-training-app/#website",
+            "url": "https://srp1357.github.io/ear-training-app/",
+            "name": "Ear Training",
+            "description": "Free ear training in your browser — intervals, chords, scales, and in-key drills.",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "WebApplication",
+            "@id": "https://srp1357.github.io/ear-training-app/#app",
+            "url": "https://srp1357.github.io/ear-training-app/",
+            "name": "Ear Training",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "Any",
+            "browserRequirements": "Requires JavaScript and Web Audio API",
+            "isAccessibleForFree": true,
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "description": "Practice identifying intervals, chords, scales, and diatonic functions by ear. Runs locally in the browser with no accounts or tracking.",
+            "image": "https://srp1357.github.io/ear-training-app/og-image.png",
+            "featureList": [
+              "Interval identification (unison through octave)",
+              "Chord identification (triads and sevenths)",
+              "Scale identification (modes, minors, pentatonics, blues)",
+              "Chords in key (diatonic functions)",
+              "Notes in key (scale degrees)"
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://srp1357.github.io/ear-training-app/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Is this ear training app free?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Ear Training is free to use in your browser with no accounts, ads, or subscriptions."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does it collect my data?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. There is no tracking and no accounts. Audio is synthesized in your browser, and settings stay in local storage on your device."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What can I practice?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Intervals, chords, scales, and in-key drills for diatonic chord functions and scale degrees. Every prompt shows the full answer vocabulary for that mode."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <main style="max-width: 40rem; margin: 2rem auto; padding: 0 1.25rem; font-family: system-ui, sans-serif; line-height: 1.5">
+        <h1>Ear Training</h1>
+        <p>
+          Free ear training in your browser — practice intervals, chords, scales, and in-key hearing.
+          No accounts. No tracking. Audio stays on your device.
+        </p>
+        <p>Enable JavaScript to use the interactive drills.</p>
+        <ul>
+          <li><a href="/ear-training-app/intervals">Interval ear training</a></li>
+          <li><a href="/ear-training-app/chords">Chord ear training</a></li>
+          <li><a href="/ear-training-app/scales">Scale ear training</a></li>
+          <li><a href="/ear-training-app/in-key/chords">Chords in key</a></li>
+          <li><a href="/ear-training-app/in-key/notes">Notes in key</a></li>
+        </ul>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

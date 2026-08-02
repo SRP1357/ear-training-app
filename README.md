@@ -1,10 +1,10 @@
 # Ear Training
 
-A free, local-only ear training site for musicians.
+Free ear training for musicians: practice **intervals**, **chords**, **scales**, and **in-key** hearing in your browser.
 
-No accounts. No ads. No analytics. Audio stays in your browser.
+No accounts. No ads. No analytics. Audio stays on your device.
 
-### 🌐 Try it here
+### Try it
 
 **https://srp1357.github.io/ear-training-app/**
 
