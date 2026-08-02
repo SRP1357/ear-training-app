@@ -34,12 +34,12 @@ export function HomePage() {
       <p className="section">In a Key</p>
       <CardButton
         title="Chords in Key"
-        subtitle="Diatonic triad functions in major, natural minor, or harmonic minor."
+        subtitle="Hear home/current chord, then name the mystery chord’s function in the key."
         to="/in-key/chords"
       />
       <CardButton
         title="Notes in Key"
-        subtitle="All 12 chromatic degrees relative to the tonic — every degree always choosable."
+        subtitle="Hear tonic/current note, then name the mystery degree — all 12 always listed."
         to="/in-key/notes"
       />
 

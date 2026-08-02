@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { melodyToRoll, synth } from '../audio/synth';
+import { ChainCompare } from '../components/ChainCompare';
 import { PianoRoll } from '../components/PianoRoll';
 import {
   ChoiceButton,
@@ -54,6 +55,11 @@ export function InKeyNotesPage() {
   const [chainLeft, setChainLeft] = useState(CHAIN_LEN);
   const [ready, setReady] = useState(false);
 
+  const stepNumber = CHAIN_LEN - chainLeft + 1;
+  const isFirstStep = chainLeft === CHAIN_LEN;
+  const knownRole = isFirstStep ? 'Home note (tonic)' : 'Current note';
+  const knownLabel = current?.label ?? '—';
+
   const startChain = useCallback(async () => {
     const gen = ++genRef.current;
     const active = buildSession();
@@ -82,12 +88,17 @@ export function InKeyNotesPage() {
     }
   }, [ready, startChain, canAutoplay]);
 
-  const playTarget = async () => {
+  const playKnown = async () => {
+    if (!current) return;
+    await synth.playNotes([midiFor(session, current)], 0.65, 0);
+  };
+
+  const playMystery = async () => {
     if (!target) return;
     await synth.playNotes([midiFor(session, target)], 0.7, 0);
   };
 
-  const playCompare = async () => {
+  const playBoth = async () => {
     if (!current || !target) return;
     await synth.playNotes(
       [midiFor(session, current), midiFor(session, target)],
@@ -96,7 +107,7 @@ export function InKeyNotesPage() {
     );
   };
 
-  const playHome = async () => {
+  const playTonic = async () => {
     await synth.playNotes([session.tonic], 0.65, 0);
   };
 
@@ -117,16 +128,18 @@ export function InKeyNotesPage() {
     }
 
     const gen = ++genRef.current;
+    const becomingCurrent = target;
     const next = nextDegree(target.id);
-    setCurrent(target);
+    setCurrent(becomingCurrent);
     setTarget(next);
     setPhase('prompt');
     setSelectedId(null);
     setRoll([]);
     setChainLeft((n) => n - 1);
     void (async () => {
-      await synth.playNotes([midiFor(session, next)], 0.7, 0);
+      await synth.playNotes([midiFor(session, becomingCurrent)], 0.55, 0);
       if (gen !== genRef.current) return;
+      await synth.playNotes([midiFor(session, next)], 0.7, 0);
     })();
   };
 
@@ -135,28 +148,51 @@ export function InKeyNotesPage() {
     return selectedId === target.id ? 'correct' : 'wrong';
   }, [phase, selectedId, target]);
 
+  const promptText = !ready
+    ? 'Enable audio to start a chain in a random key.'
+    : phase === 'answered' && target
+      ? `That note was degree ${target.label}.`
+      : isFirstStep
+        ? 'You hear the tonic (1), then a mystery note. What degree is the mystery note?'
+        : `You hear the current note (${knownLabel}), then a new mystery note. What degree is the mystery note?`;
+
   return (
     <Screen>
       <PageHeader title="In Key / Notes" />
       <Panel>
         <p className="meta">
           {ready
-            ? `${keyLabel(session.tonic, session.mode)} · chain ${CHAIN_LEN - chainLeft + 1}/${CHAIN_LEN}`
+            ? `${keyLabel(session.tonic, session.mode)} · step ${stepNumber} of ${CHAIN_LEN}`
             : 'Waiting for audio'}
         </p>
+
+        {ready && current && target ? (
+          <ChainCompare
+            knownRole={knownRole}
+            knownLabel={knownLabel}
+            mysteryRole="Mystery note"
+            mysteryLabel={target.label}
+            revealed={phase === 'answered'}
+            onPlayKnown={() => void playKnown()}
+            onPlayMystery={() => void playMystery()}
+            disabled={needsUnlock}
+          />
+        ) : null}
+
+        <p className="prompt-line">{promptText}</p>
+
         {status === 'correct' ? <StatusPill tone="success" label="Correct" /> : null}
         {status === 'wrong' ? <StatusPill tone="danger" label="Incorrect" /> : null}
-        {phase === 'prompt' ? <StatusPill tone="neutral" label="Name the degree" /> : null}
+
         <div className="roll-wrap">
           <PianoRoll
             events={phase === 'answered' ? roll : []}
             label={
-              phase === 'answered' && target && current
-                ? `${target.label}  ·  from ${current.label}`
-                : undefined
+              phase === 'answered' && target ? `Mystery note · ${target.label}` : undefined
             }
           />
         </div>
+
         <div className="actions">
           {needsUnlock ? (
             <PrimaryButton
@@ -168,27 +204,27 @@ export function InKeyNotesPage() {
           ) : (
             <>
               <GhostButton
-                label="Replay target"
-                onClick={() => void playTarget()}
-                disabled={!target}
-              />
-              <GhostButton
-                label="Current → target"
-                onClick={() => void playCompare()}
+                label="Play both in order"
+                onClick={() => void playBoth()}
                 disabled={!current || !target}
               />
-              <GhostButton label="Play tonic" onClick={() => void playHome()} disabled={!ready} />
+              <GhostButton
+                label="Play tonic (1)"
+                onClick={() => void playTonic()}
+                disabled={!ready}
+              />
             </>
           )}
           {phase === 'answered' ? (
             <PrimaryButton
-              label={status === 'correct' && chainLeft > 1 ? 'Continue chain' : 'New chain'}
+              label={status === 'correct' && chainLeft > 1 ? 'Next in chain' : 'New key'}
               onClick={continueChain}
             />
           ) : null}
         </div>
       </Panel>
 
+      <p className="section">Choose the mystery note’s degree</p>
       <div className="grid grid--compact">
         {CHROMATIC_DEGREES.map((item) => {
           let state: 'idle' | 'correct' | 'wrong' | 'muted' = 'idle';

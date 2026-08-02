@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { chordToRoll, synth } from '../audio/synth';
+import { ChainCompare } from '../components/ChainCompare';
 import { PianoRoll } from '../components/PianoRoll';
 import {
   ChoiceButton,
@@ -84,17 +85,21 @@ export function InKeyChordsPage() {
   const [chainLeft, setChainLeft] = useState(CHAIN_LEN);
   const [ready, setReady] = useState(false);
 
-  const homeNotes = useMemo(
-    () => chordFor(session, session.functions[0]),
-    [session],
-  );
+  const homeFn = session.functions[0];
+  const homeNotes = useMemo(() => chordFor(session, homeFn), [session, homeFn]);
+  const stepNumber = CHAIN_LEN - chainLeft + 1;
+  const isFirstStep = chainLeft === CHAIN_LEN;
+  const knownRole = isFirstStep ? 'Home chord' : 'Current chord';
+  const knownLabel = current?.fn.label ?? '—';
 
   const startChain = useCallback(async () => {
     const gen = ++genRef.current;
     const active = buildSession();
-    const homeFn = active.functions[0];
-    const home: Step = { fn: homeFn, notes: chordFor(active, homeFn) };
-    const targetFn = nextFunction(active, homeFn.id);
+    const home: Step = {
+      fn: active.functions[0],
+      notes: chordFor(active, active.functions[0]),
+    };
+    const targetFn = nextFunction(active, home.fn.id);
     const nextTarget: Step = { fn: targetFn, notes: chordFor(active, targetFn) };
 
     setSession(active);
@@ -119,12 +124,17 @@ export function InKeyChordsPage() {
     }
   }, [ready, startChain, canAutoplay]);
 
-  const playTarget = async () => {
+  const playKnown = async () => {
+    if (!current) return;
+    await synth.playChord(current.notes, 0.9);
+  };
+
+  const playMystery = async () => {
     if (!target) return;
     await synth.playChord(target.notes, 1.05);
   };
 
-  const playCompare = async () => {
+  const playBoth = async () => {
     if (!current || !target) return;
     const gen = genRef.current;
     await synth.playChord(current.notes, 0.75);
@@ -132,7 +142,7 @@ export function InKeyChordsPage() {
     await synth.playChord(target.notes, 1.0);
   };
 
-  const playHome = async () => {
+  const playTonic = async () => {
     await synth.playChord(homeNotes, 0.9);
   };
 
@@ -158,16 +168,18 @@ export function InKeyChordsPage() {
       fn: nextTargetFn,
       notes: chordFor(session, nextTargetFn),
     };
+    const becomingCurrent = target;
 
-    setCurrent(target);
+    setCurrent(becomingCurrent);
     setTarget(nextTarget);
     setPhase('prompt');
     setSelectedId(null);
     setRoll([]);
     setChainLeft((n) => n - 1);
     void (async () => {
-      await synth.playChord(nextTarget.notes, 1.05);
+      await synth.playChord(becomingCurrent.notes, 0.75);
       if (gen !== genRef.current) return;
+      await synth.playChord(nextTarget.notes, 1.05);
     })();
   };
 
@@ -176,28 +188,53 @@ export function InKeyChordsPage() {
     return selectedId === target.fn.id ? 'correct' : 'wrong';
   }, [phase, selectedId, target]);
 
+  const promptText = !ready
+    ? 'Enable audio to start a chain in a random key.'
+    : phase === 'answered' && target
+      ? `That chord was ${target.fn.label}.`
+      : isFirstStep
+        ? `You hear the home chord (${homeFn.label}), then a mystery chord. What is the mystery chord’s function?`
+        : `You hear the current chord (${knownLabel}), then a new mystery chord. What is the mystery chord’s function?`;
+
   return (
     <Screen>
       <PageHeader title="In Key / Chords" />
       <Panel>
         <p className="meta">
           {ready
-            ? `${keyLabel(session.tonic, session.mode)} · chain ${CHAIN_LEN - chainLeft + 1}/${CHAIN_LEN}`
+            ? `${keyLabel(session.tonic, session.mode)} · step ${stepNumber} of ${CHAIN_LEN}`
             : 'Waiting for audio'}
         </p>
+
+        {ready && current && target ? (
+          <ChainCompare
+            knownRole={knownRole}
+            knownLabel={knownLabel}
+            mysteryRole="Mystery chord"
+            mysteryLabel={target.fn.label}
+            revealed={phase === 'answered'}
+            onPlayKnown={() => void playKnown()}
+            onPlayMystery={() => void playMystery()}
+            disabled={needsUnlock}
+          />
+        ) : null}
+
+        <p className="prompt-line">{promptText}</p>
+
         {status === 'correct' ? <StatusPill tone="success" label="Correct" /> : null}
         {status === 'wrong' ? <StatusPill tone="danger" label="Incorrect" /> : null}
-        {phase === 'prompt' ? <StatusPill tone="neutral" label="Name the function" /> : null}
+
         <div className="roll-wrap">
           <PianoRoll
             events={phase === 'answered' ? roll : []}
             label={
-              phase === 'answered' && target && current
-                ? `${target.fn.label}  ·  from ${current.fn.label}`
+              phase === 'answered' && target
+                ? `Mystery chord · ${target.fn.label}`
                 : undefined
             }
           />
         </div>
+
         <div className="actions">
           {needsUnlock ? (
             <PrimaryButton
@@ -209,27 +246,27 @@ export function InKeyChordsPage() {
           ) : (
             <>
               <GhostButton
-                label="Replay target"
-                onClick={() => void playTarget()}
-                disabled={!target}
-              />
-              <GhostButton
-                label="Current → target"
-                onClick={() => void playCompare()}
+                label="Play both in order"
+                onClick={() => void playBoth()}
                 disabled={!current || !target}
               />
-              <GhostButton label="Play home" onClick={() => void playHome()} disabled={!ready} />
+              <GhostButton
+                label={`Play tonic (${homeFn.label})`}
+                onClick={() => void playTonic()}
+                disabled={!ready}
+              />
             </>
           )}
           {phase === 'answered' ? (
             <PrimaryButton
-              label={status === 'correct' && chainLeft > 1 ? 'Continue chain' : 'New chain'}
+              label={status === 'correct' && chainLeft > 1 ? 'Next in chain' : 'New key'}
               onClick={continueChain}
             />
           ) : null}
         </div>
       </Panel>
 
+      <p className="section">Choose the mystery chord’s function</p>
       <div className="grid grid--compact">
         {session.functions.map((item) => {
           let state: 'idle' | 'correct' | 'wrong' | 'muted' = 'idle';
