@@ -19,17 +19,17 @@ export const PAGE_SEO = {
   intervals: {
     title: 'Interval Ear Training — Ascending & Descending',
     description:
-      'Practice identifying musical intervals from unison to octave. Ascending and descending prompts with the full interval vocabulary every time.',
+      'Practice identifying musical intervals from unison to octave. Ascending and descending prompts with every interval available as an answer choice.',
     path: '/intervals',
   },
   chords: {
     title: 'Chord Ear Training — Triads & Sevenths',
     description:
-      'Hear root-position triads and seventh chords, then name them. Replay as a block chord or arpeggio anytime.',
+      'Hear root-position triads and seventh chords, then identify them. Replay as a block chord or arpeggio at any time.',
     path: '/chords',
   },
   scales: {
-    title: 'Scale Ear Training — Modes, Minors & Pentatonics',
+    title: 'Scale Ear Training — Modes, Minors, Pentatonics & Blues',
     description:
       'Identify scales and modes by ear. Each prompt plays ascending then descending through the full scale catalog.',
     path: '/scales',
@@ -37,13 +37,13 @@ export const PAGE_SEO = {
   inKeyChords: {
     title: 'Chords in Key — Functional Ear Training',
     description:
-      'Train diatonic chord functions in major and natural minor. Hear a home or current chord, then name the mystery chord.',
+      'Train diatonic chord functions in major and natural minor. Hear a home or current chord, then identify the mystery chord.',
     path: '/in-key/chords',
   },
   inKeyNotes: {
     title: 'Notes in Key — Scale Degree Ear Training',
     description:
-      'Practice hearing scale degrees in major and natural minor. Hear the tonic or current note, then name the mystery degree.',
+      'Practice hearing scale degrees in major and natural minor. Hear the tonic or current note, then identify the mystery degree.',
     path: '/in-key/notes',
   },
   settings: {

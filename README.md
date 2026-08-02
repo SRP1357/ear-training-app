@@ -1,6 +1,6 @@
 # Ear Training
 
-Free ear training for musicians: practice **intervals**, **chords**, **scales**, and **in-key** hearing in your browser.
+Free ear training for musicians: practice **intervals**, **chords**, **scales**, and **in-key** drills in your browser.
 
 No accounts. No ads. No analytics. Audio stays on your device.
 
@@ -10,21 +10,21 @@ No accounts. No ads. No analytics. Audio stays on your device.
 
 ## Modes
 
-Every prompt shows the **full** answer vocabulary for that mode — nothing is filtered out.
+Every prompt shows the full set of answer choices for that mode.
 
-**Vocabulary**
+**Core**
 - Intervals (unison through octave; ascending or descending)
-- Chords (root-position triads + sevenths)
+- Chords (root-position triads and sevenths)
 - Scales (modes, minors, pentatonics, blues — each played up then down)
 
-**In a Key**
+**In key**
 - Chords: diatonic triad functions in major or natural minor
 - Notes: diatonic scale degrees in major or natural minor
 
 ## Stack
 
 - Vite + React + TypeScript
-- Web Audio API synth (sine / triangle / saw / square)
+- Web Audio API synth (sine / triangle / sawtooth / square)
 - Settings in `localStorage`
 
 ## Develop

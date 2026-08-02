@@ -82,16 +82,16 @@ export function ChordDrillPage() {
         <div className="actions">
           {needsUnlock ? (
             <PrimaryButton
-              label="Tap to enable audio"
+              label="Enable audio"
               onClick={() => {
                 void unlock().then(() => playPrompt(prompt));
               }}
             />
           ) : (
             <>
-              <GhostButton label="Replay chord" onClick={() => void playPrompt(prompt)} />
+              <GhostButton label="Replay" onClick={() => void playPrompt(prompt)} />
               <GhostButton
-                label="Arpeggiate"
+                label="Play arpeggio"
                 onClick={() => void synth.playArpeggio(prompt.notes)}
               />
             </>

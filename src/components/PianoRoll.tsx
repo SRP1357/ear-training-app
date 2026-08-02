@@ -8,7 +8,7 @@ type Props = {
 
 export function PianoRoll({ events, label }: Props) {
   if (events.length === 0) {
-    return <div className="roll-empty">Awaiting signal</div>;
+    return <div className="roll-empty">Answer to reveal notation</div>;
   }
 
   const midis = events.map((e) => e.midi);

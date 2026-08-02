@@ -42,7 +42,7 @@ export const SCALES: ScaleDef[] = [
   { id: 'major', label: 'Major / Ionian', intervals: [0, 2, 4, 5, 7, 9, 11, 12] },
   { id: 'natMinor', label: 'Natural minor / Aeolian', intervals: [0, 2, 3, 5, 7, 8, 10, 12] },
   { id: 'harmMinor', label: 'Harmonic minor', intervals: [0, 2, 3, 5, 7, 8, 11, 12] },
-  { id: 'melMinor', label: 'Melodic minor', intervals: [0, 2, 3, 5, 7, 9, 11, 12] },
+  { id: 'melMinor', label: 'Melodic minor (ascending)', intervals: [0, 2, 3, 5, 7, 9, 11, 12] },
   { id: 'dorian', label: 'Dorian', intervals: [0, 2, 3, 5, 7, 9, 10, 12] },
   { id: 'phrygian', label: 'Phrygian', intervals: [0, 1, 3, 5, 7, 8, 10, 12] },
   { id: 'lydian', label: 'Lydian', intervals: [0, 2, 4, 6, 7, 9, 11, 12] },
@@ -105,6 +105,6 @@ export const NATURAL_MINOR_SCALE = [0, 2, 3, 5, 7, 8, 10] as const;
 export const TIMBRES = [
   { id: 'sine' as const, label: 'Sine' },
   { id: 'triangle' as const, label: 'Triangle' },
-  { id: 'sawtooth' as const, label: 'Saw' },
+  { id: 'sawtooth' as const, label: 'Sawtooth' },
   { id: 'square' as const, label: 'Square' },
 ];

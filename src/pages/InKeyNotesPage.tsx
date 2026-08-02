@@ -151,21 +151,21 @@ export function InKeyNotesPage() {
   }, [phase, selectedId, target]);
 
   const promptText = !ready
-    ? 'Enable audio to start a chain in a random key.'
+    ? 'Enable audio to begin a chain in a random key.'
     : phase === 'answered' && target
-      ? `That note was degree ${target.label}.`
+      ? `That note was ${target.label}.`
       : isFirstStep
         ? 'You hear the tonic (1), then a mystery note. What degree is the mystery note?'
         : `You hear the current note (${knownLabel}), then a new mystery note. What degree is the mystery note?`;
 
   return (
     <Screen>
-      <PageHeader title="In Key / Notes" />
+      <PageHeader title="Notes in key" />
       <Panel>
         <p className="meta">
           {ready
             ? `${keyLabel(session.tonic, session.mode)} · step ${stepNumber} of ${CHAIN_LEN}`
-            : 'Waiting for audio'}
+            : 'Enable audio to begin'}
         </p>
 
         {ready && current && target ? (
@@ -198,7 +198,7 @@ export function InKeyNotesPage() {
         <div className="actions">
           {needsUnlock ? (
             <PrimaryButton
-              label="Tap to enable audio"
+              label="Enable audio"
               onClick={() => {
                 void unlock().then(() => startChain());
               }}

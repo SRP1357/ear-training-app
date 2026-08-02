@@ -175,7 +175,7 @@ export function InKeyChordsPage() {
   }, [phase, selectedId, target]);
 
   const promptText = !ready
-    ? 'Enable audio to start a chain in a random key.'
+    ? 'Enable audio to begin a chain in a random key.'
     : phase === 'answered' && target
       ? `That chord was ${target.fn.label}.`
       : isFirstStep
@@ -184,12 +184,12 @@ export function InKeyChordsPage() {
 
   return (
     <Screen>
-      <PageHeader title="In Key / Chords" />
+      <PageHeader title="Chords in key" />
       <Panel>
         <p className="meta">
           {ready
             ? `${keyLabel(session.tonic, session.mode)} · step ${stepNumber} of ${CHAIN_LEN}`
-            : 'Waiting for audio'}
+            : 'Enable audio to begin'}
         </p>
 
         {ready && current && target ? (
@@ -224,7 +224,7 @@ export function InKeyChordsPage() {
         <div className="actions">
           {needsUnlock ? (
             <PrimaryButton
-              label="Tap to enable audio"
+              label="Enable audio"
               onClick={() => {
                 void unlock().then(() => startChain());
               }}

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const MODES = [
   {
     title: 'Intervals',
-    subtitle: 'Unison through octave, up or down.',
+    subtitle: 'Unison through octave, ascending or descending.',
     to: '/intervals',
     tag: 'Core',
   },
@@ -15,21 +15,21 @@ const MODES = [
   },
   {
     title: 'Scales',
-    subtitle: 'Modes, minors, pentatonics, blues.',
+    subtitle: 'Modes, minors, pentatonics, and blues.',
     to: '/scales',
     tag: 'Core',
   },
   {
-    title: 'Chords in Key',
-    subtitle: 'Name the function after hearing the home chord.',
+    title: 'Chords in key',
+    subtitle: 'Identify diatonic chord functions in major or natural minor.',
     to: '/in-key/chords',
-    tag: 'In a key',
+    tag: 'In key',
   },
   {
-    title: 'Notes in Key',
-    subtitle: 'Name the degree after hearing the tonic.',
+    title: 'Notes in key',
+    subtitle: 'Identify diatonic scale degrees in major or natural minor.',
     to: '/in-key/notes',
-    tag: 'In a key',
+    tag: 'In key',
   },
 ] as const;
 
@@ -44,11 +44,11 @@ export function HomePage() {
 
       <div className="home-shell">
         <header className="home-hero">
-          <p className="home-kicker">Local only · no accounts</p>
-          <h1 className="home-brand">Ear training</h1>
+          <p className="home-kicker">Runs in your browser · no accounts</p>
+          <h1 className="home-brand">Ear Training</h1>
           <p className="home-lead">
-            Hear a sound, name what it is. Full vocabularies on every prompt — audio stays on your
-            device.
+            Listen, then identify what you hear. Every answer choice stays available. Audio stays on
+            your device.
           </p>
           <div className="home-cta-row">
             <Link to="/intervals" className="home-cta">
@@ -78,7 +78,9 @@ export function HomePage() {
             <h2 id="home-modes-title" className="home-modes-title">
               Practice modes
             </h2>
-            <p className="home-modes-note">Pick a drill. Every option in that mode is always available.</p>
+            <p className="home-modes-note">
+              Choose a mode. All answer choices remain available on every prompt.
+            </p>
           </div>
 
           <div className="home-grid">

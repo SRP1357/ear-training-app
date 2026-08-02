@@ -1,5 +1,5 @@
 import { synth } from '../audio/synth';
-import { Body, ChoiceButton, Eyebrow, PageHeader, Panel, Screen, Title } from '../components/ui';
+import { Body, ChoiceButton, PageHeader, Panel, Screen } from '../components/ui';
 import { useSettings } from '../storage/settings';
 import { TIMBRES } from '../theory/catalog';
 import type { Timbre } from '../theory/types';
@@ -15,13 +15,11 @@ export function SettingsPage() {
   return (
     <Screen>
       <PageHeader title="Settings" />
-      <Eyebrow>System</Eyebrow>
-      <Title>Settings</Title>
-      <Body>Local preferences only. Nothing is uploaded or synced.</Body>
+      <Body>Preferences stay in this browser. Nothing is uploaded or synced.</Body>
 
       <Panel>
         <p className="label">Timbre</p>
-        <p className="help">Used across every drill.</p>
+        <p className="help">Applied to every drill.</p>
         <div className="grid">
           {TIMBRES.map((item) => (
             <ChoiceButton
@@ -39,8 +37,8 @@ export function SettingsPage() {
       <Panel>
         <p className="label">Privacy</p>
         <p className="help">
-          No accounts, ads, analytics, or network calls for training data. Your answers and
-          settings remain in this browser.
+          No accounts, ads, analytics, or network calls for training data. Your answers and settings
+          remain in this browser.
         </p>
       </Panel>
     </Screen>

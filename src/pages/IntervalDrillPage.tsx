@@ -86,7 +86,7 @@ export function IntervalDrillPage() {
         <div className="actions">
           {needsUnlock ? (
             <PrimaryButton
-              label="Tap to enable audio"
+              label="Enable audio"
               onClick={() => {
                 void unlock().then(() => playPrompt(prompt));
               }}

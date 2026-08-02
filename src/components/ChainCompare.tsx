@@ -3,7 +3,7 @@ type Props = {
   knownRole: string;
   /** Revealed label for the known sound, e.g. "I" or "♭3" */
   knownLabel: string;
-  /** e.g. "Guess this chord" */
+  /** e.g. "Mystery chord" */
   mysteryRole: string;
   /** Shown after answer; "?" while prompting */
   mysteryLabel: string;
@@ -33,7 +33,7 @@ export function ChainCompare({
       >
         <span className="chain-role">{knownRole}</span>
         <span className="chain-value">{knownLabel}</span>
-        <span className="chain-hint">Tap to hear</span>
+        <span className="chain-hint">Play</span>
       </button>
 
       <div className="chain-arrow" aria-hidden>
@@ -48,7 +48,7 @@ export function ChainCompare({
       >
         <span className="chain-role">{mysteryRole}</span>
         <span className="chain-value">{revealed ? mysteryLabel : '?'}</span>
-        <span className="chain-hint">Tap to hear</span>
+        <span className="chain-hint">Play</span>
       </button>
     </div>
   );
