@@ -12,7 +12,6 @@ import {
 } from '../components/ui';
 import { useDrillAudio } from '../hooks/useDrillAudio';
 import { SCALES } from '../theory/catalog';
-import { scaleChoicesFor } from '../theory/drillPools';
 import { pickRandom, randomRootMidi } from '../theory/pitch';
 import type { RollEvent, ScaleDef } from '../theory/types';
 
@@ -21,7 +20,6 @@ type Phase = 'prompt' | 'answered';
 type Prompt = {
   answer: ScaleDef;
   notes: number[];
-  choices: ScaleDef[];
 };
 
 function makePrompt(): Prompt {
@@ -30,7 +28,6 @@ function makePrompt(): Prompt {
   return {
     answer,
     notes: answer.intervals.map((interval) => root + interval),
-    choices: scaleChoicesFor(answer),
   };
 }
 
@@ -98,7 +95,7 @@ export function ScaleDrillPage() {
       </Panel>
 
       <div className="grid">
-        {prompt.choices.map((item) => {
+        {SCALES.map((item) => {
           let state: 'idle' | 'correct' | 'wrong' | 'muted' = 'idle';
           if (phase === 'answered') {
             if (item.id === prompt.answer.id) state = 'correct';

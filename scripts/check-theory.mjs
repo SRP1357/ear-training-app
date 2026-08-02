@@ -50,32 +50,12 @@ const MINOR_FUNCTIONS = [
   { id: 'VII', degree: 6, quality: 'maj' },
 ];
 
-function poolFor(answer, all) {
-  const count = answer.intervals.length;
-  const pool = all.filter((item) => item.intervals.length === count);
-  return pool.length >= 2 ? pool : all;
-}
-
 let failed = 0;
 function assert(cond, msg) {
   if (!cond) {
     console.error('FAIL:', msg);
     failed += 1;
   }
-}
-
-for (const s of SCALES) {
-  const pool = poolFor(s, SCALES);
-  assert(pool.length >= 2, `scale ${s.id} pool size ${pool.length}`);
-  assert(
-    pool.some((p) => p.id === s.id),
-    `scale ${s.id} missing from its pool`,
-  );
-}
-
-for (const c of CHORDS) {
-  const pool = poolFor(c, CHORDS);
-  assert(pool.length >= 2, `chord ${c.id} pool size ${pool.length}`);
 }
 
 function pc(n) {

@@ -12,7 +12,6 @@ import {
 } from '../components/ui';
 import { useDrillAudio } from '../hooks/useDrillAudio';
 import { CHORDS } from '../theory/catalog';
-import { chordChoicesFor } from '../theory/drillPools';
 import { pickRandom, randomRootMidi } from '../theory/pitch';
 import type { ChordDef, RollEvent } from '../theory/types';
 
@@ -21,7 +20,6 @@ type Phase = 'prompt' | 'answered';
 type Prompt = {
   answer: ChordDef;
   notes: number[];
-  choices: ChordDef[];
 };
 
 function makePrompt(): Prompt {
@@ -30,7 +28,6 @@ function makePrompt(): Prompt {
   return {
     answer,
     notes: answer.intervals.map((interval) => root + interval),
-    choices: chordChoicesFor(answer),
   };
 }
 
@@ -105,7 +102,7 @@ export function ChordDrillPage() {
       </Panel>
 
       <div className="grid">
-        {prompt.choices.map((item) => {
+        {CHORDS.map((item) => {
           let state: 'idle' | 'correct' | 'wrong' | 'muted' = 'idle';
           if (phase === 'answered') {
             if (item.id === prompt.answer.id) state = 'correct';
