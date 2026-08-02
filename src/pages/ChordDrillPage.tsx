@@ -93,7 +93,6 @@ export function ChordDrillPage() {
               <GhostButton
                 label="Arpeggiate"
                 onClick={() => void synth.playArpeggio(prompt.notes)}
-                disabled={phase !== 'answered'}
               />
             </>
           )}
