@@ -22,12 +22,19 @@ type Prompt = {
   notes: number[];
 };
 
+/** Ascend to the top degree, then descend without repeating the peak. */
+function scaleUpDown(root: number, intervals: number[]): number[] {
+  const ascending = intervals.map((interval) => root + interval);
+  const descending = ascending.slice(0, -1).reverse();
+  return [...ascending, ...descending];
+}
+
 function makePrompt(): Prompt {
   const answer = pickRandom(SCALES);
   const root = randomRootMidi(48, 64);
   return {
     answer,
-    notes: answer.intervals.map((interval) => root + interval),
+    notes: scaleUpDown(root, answer.intervals),
   };
 }
 
@@ -39,7 +46,7 @@ export function ScaleDrillPage() {
   const [roll, setRoll] = useState<RollEvent[]>([]);
 
   const playPrompt = useCallback(async (current: Prompt) => {
-    await synth.playMelody(current.notes, 0.28, 0.03);
+    await synth.playMelody(current.notes, 0.24, 0.02);
   }, []);
 
   useEffect(() => {
@@ -51,7 +58,7 @@ export function ScaleDrillPage() {
     if (phase === 'answered') return;
     setSelectedId(choice.id);
     setPhase('answered');
-    setRoll(melodyToRoll(prompt.notes, 0.28, 0.03));
+    setRoll(melodyToRoll(prompt.notes, 0.24, 0.02));
   };
 
   const next = () => {
@@ -72,7 +79,9 @@ export function ScaleDrillPage() {
       <Panel>
         {status === 'correct' ? <StatusPill tone="success" label="Correct" /> : null}
         {status === 'wrong' ? <StatusPill tone="danger" label="Incorrect" /> : null}
-        {phase === 'prompt' ? <StatusPill tone="neutral" label="Identify scale" /> : null}
+        {phase === 'prompt' ? (
+          <StatusPill tone="neutral" label="Identify scale (up then down)" />
+        ) : null}
         <div className="roll-wrap">
           <PianoRoll
             events={phase === 'answered' ? roll : []}

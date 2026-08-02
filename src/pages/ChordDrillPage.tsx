@@ -24,8 +24,7 @@ type Prompt = {
 
 function makePrompt(): Prompt {
   const answer = pickRandom(CHORDS);
-  // Leave headroom for ninths (root + 14).
-  const root = randomRootMidi(48, 60);
+  const root = randomRootMidi(48, 65);
   return {
     answer,
     notes: answer.intervals.map((interval) => root + interval),

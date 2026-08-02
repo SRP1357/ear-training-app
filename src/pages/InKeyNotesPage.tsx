@@ -12,7 +12,7 @@ import {
   StatusPill,
 } from '../components/ui';
 import { useDrillAudio } from '../hooks/useDrillAudio';
-import { CHROMATIC_DEGREES } from '../theory/catalog';
+import { MAJOR_DEGREES, MINOR_DEGREES } from '../theory/catalog';
 import { keyLabel } from '../theory/keys';
 import { pickRandom, randomInt } from '../theory/pitch';
 import type { DegreeDef, KeyMode, RollEvent } from '../theory/types';
@@ -24,13 +24,15 @@ const CHAIN_LEN = 8;
 type Session = {
   mode: KeyMode;
   tonic: number;
+  degrees: DegreeDef[];
 };
 
 function buildSession(): Session {
-  const mode: KeyMode = pickRandom(['major', 'minor', 'harmonicMinor'] as const);
+  const mode: KeyMode = pickRandom(['major', 'minor'] as const);
   return {
     mode,
     tonic: randomInt(55, 67),
+    degrees: mode === 'major' ? MAJOR_DEGREES : MINOR_DEGREES,
   };
 }
 
@@ -38,8 +40,8 @@ function midiFor(session: Session, degree: DegreeDef) {
   return session.tonic + degree.semitone;
 }
 
-function nextDegree(currentId: string): DegreeDef {
-  const options = CHROMATIC_DEGREES.filter((item) => item.id !== currentId);
+function nextDegree(session: Session, currentId: string): DegreeDef {
+  const options = session.degrees.filter((item) => item.id !== currentId);
   return pickRandom(options);
 }
 
@@ -63,8 +65,8 @@ export function InKeyNotesPage() {
   const startChain = useCallback(async () => {
     const gen = ++genRef.current;
     const active = buildSession();
-    const home = CHROMATIC_DEGREES[0];
-    const next = nextDegree(home.id);
+    const home = active.degrees[0];
+    const next = nextDegree(active, home.id);
 
     setSession(active);
     setCurrent(home);
@@ -129,7 +131,7 @@ export function InKeyNotesPage() {
 
     const gen = ++genRef.current;
     const becomingCurrent = target;
-    const next = nextDegree(target.id);
+    const next = nextDegree(session, target.id);
     setCurrent(becomingCurrent);
     setTarget(next);
     setPhase('prompt');
@@ -226,7 +228,7 @@ export function InKeyNotesPage() {
 
       <p className="section">Choose the mystery note’s degree</p>
       <div className="grid grid--compact">
-        {CHROMATIC_DEGREES.map((item) => {
+        {session.degrees.map((item) => {
           let state: 'idle' | 'correct' | 'wrong' | 'muted' = 'idle';
           if (phase === 'answered' && target) {
             if (item.id === target.id) state = 'correct';

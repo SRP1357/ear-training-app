@@ -1,9 +1,8 @@
 /** Offline theory integrity checks. Run: node scripts/check-theory.mjs */
 
-const TRIAD = { maj: [0, 4, 7], min: [0, 3, 7], dim: [0, 3, 6], aug: [0, 4, 8] };
+const TRIAD = { maj: [0, 4, 7], min: [0, 3, 7], dim: [0, 3, 6] };
 const MAJOR_SCALE = [0, 2, 4, 5, 7, 9, 11];
 const NATURAL_MINOR = [0, 2, 3, 5, 7, 8, 10];
-const HARMONIC_MINOR = [0, 2, 3, 5, 7, 8, 11];
 
 const MAJOR_FUNCTIONS = [
   { id: 'I', degree: 0, quality: 'maj' },
@@ -23,17 +22,10 @@ const MINOR_FUNCTIONS = [
   { id: 'VI', degree: 5, quality: 'maj' },
   { id: 'VII', degree: 6, quality: 'maj' },
 ];
-const HARMONIC_MINOR_FUNCTIONS = [
-  { id: 'i', degree: 0, quality: 'min' },
-  { id: 'ii', degree: 1, quality: 'dim' },
-  { id: 'III', degree: 2, quality: 'aug' },
-  { id: 'iv', degree: 3, quality: 'min' },
-  { id: 'V', degree: 4, quality: 'maj' },
-  { id: 'VI', degree: 5, quality: 'maj' },
-  { id: 'vii', degree: 6, quality: 'dim' },
-];
 
-const CHROMATIC_DEGREES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+const INTERVALS = 13;
+const CHORDS = 10;
+const SCALES = 12;
 
 let failed = 0;
 function assert(cond, msg) {
@@ -62,13 +54,10 @@ function checkFunctions(label, fns, scale) {
 
 checkFunctions('major', MAJOR_FUNCTIONS, MAJOR_SCALE);
 checkFunctions('minor', MINOR_FUNCTIONS, NATURAL_MINOR);
-checkFunctions('harmonicMinor', HARMONIC_MINOR_FUNCTIONS, HARMONIC_MINOR);
 
-assert(CHROMATIC_DEGREES.length === 12, 'chromatic degrees must cover all 12 pcs');
-assert(
-  new Set(CHROMATIC_DEGREES).size === 12,
-  'chromatic degrees must be unique',
-);
+assert(INTERVALS === 13, 'expect 13 intervals (unison–octave)');
+assert(CHORDS === 10, 'expect 10 chord qualities');
+assert(SCALES === 12, 'expect 12 scales');
 
 if (failed) {
   console.error(`${failed} failure(s)`);

@@ -13,8 +13,6 @@ import {
 } from '../components/ui';
 import { useDrillAudio } from '../hooks/useDrillAudio';
 import {
-  HARMONIC_MINOR_FUNCTIONS,
-  HARMONIC_MINOR_SCALE,
   MAJOR_FUNCTIONS,
   MAJOR_SCALE,
   MINOR_FUNCTIONS,
@@ -41,25 +39,13 @@ type Step = {
   notes: number[];
 };
 
-function functionsFor(mode: KeyMode): FunctionDef[] {
-  if (mode === 'major') return MAJOR_FUNCTIONS;
-  if (mode === 'harmonicMinor') return HARMONIC_MINOR_FUNCTIONS;
-  return MINOR_FUNCTIONS;
-}
-
-function scaleFor(mode: KeyMode): readonly number[] {
-  if (mode === 'major') return MAJOR_SCALE;
-  if (mode === 'harmonicMinor') return HARMONIC_MINOR_SCALE;
-  return NATURAL_MINOR_SCALE;
-}
-
 function buildSession(): Session {
-  const mode: KeyMode = pickRandom(['major', 'minor', 'harmonicMinor'] as const);
+  const mode: KeyMode = pickRandom(['major', 'minor'] as const);
   return {
     mode,
     tonic: randomInt(48, 58),
-    functions: functionsFor(mode),
-    scale: scaleFor(mode),
+    functions: mode === 'major' ? MAJOR_FUNCTIONS : MINOR_FUNCTIONS,
+    scale: mode === 'major' ? MAJOR_SCALE : NATURAL_MINOR_SCALE,
   };
 }
 

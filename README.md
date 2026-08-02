@@ -13,13 +13,13 @@ No accounts. No ads. No analytics. Audio stays in your browser.
 Every prompt shows the **full** answer vocabulary for that mode — nothing is filtered out.
 
 **Vocabulary**
-- Intervals (unison through double octave; ascending or descending)
-- Chords (triads, sus, sixths, sevenths, ninths)
-- Scales (modes, minors, pentatonics, blues, symmetrical, chromatic)
+- Intervals (unison through octave; ascending or descending)
+- Chords (root-position triads + sevenths)
+- Scales (modes, minors, pentatonics, blues — each played up then down)
 
 **In a Key**
-- Chords: all diatonic triad functions in major, natural minor, or harmonic minor
-- Notes: all 12 chromatic degrees relative to the tonic
+- Chords: diatonic triad functions in major or natural minor
+- Notes: diatonic scale degrees in major or natural minor
 
 ## Stack
 

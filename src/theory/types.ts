@@ -23,7 +23,7 @@ export type ScaleDef = {
   intervals: number[];
 };
 
-export type TriadQuality = 'maj' | 'min' | 'dim' | 'aug';
+export type TriadQuality = 'maj' | 'min' | 'dim';
 
 export type FunctionDef = {
   id: string;
@@ -44,4 +44,4 @@ export type RollEvent = {
   duration: number;
 };
 
-export type KeyMode = 'major' | 'minor' | 'harmonicMinor';
+export type KeyMode = 'major' | 'minor';

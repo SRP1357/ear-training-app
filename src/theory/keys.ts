@@ -6,11 +6,6 @@ const MINOR_KEY_NAMES = ['C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'G♯'
 
 export function keyLabel(tonicMidi: number, mode: KeyMode): string {
   const pc = ((tonicMidi % 12) + 12) % 12;
-  if (mode === 'major') {
-    return `${MAJOR_KEY_NAMES[pc]} major`;
-  }
-  if (mode === 'harmonicMinor') {
-    return `${MINOR_KEY_NAMES[pc]} harmonic minor`;
-  }
-  return `${MINOR_KEY_NAMES[pc]} minor`;
+  const name = mode === 'major' ? MAJOR_KEY_NAMES[pc] : MINOR_KEY_NAMES[pc];
+  return `${name} ${mode}`;
 }

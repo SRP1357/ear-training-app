@@ -25,9 +25,7 @@ type Prompt = {
 
 function makePrompt(): Prompt {
   const answer = pickRandom(INTERVALS);
-  // Keep compound intervals in a singable register.
-  const lowMax = answer.semitones >= 13 ? 55 : 67;
-  const low = randomRootMidi(48, lowMax);
+  const low = randomRootMidi(48, 67);
   const high = low + answer.semitones;
   const ascending = answer.semitones === 0 || Math.random() < 0.5;
   return {
