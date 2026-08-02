@@ -23,11 +23,13 @@ export type ScaleDef = {
   intervals: number[];
 };
 
+export type TriadQuality = 'maj' | 'min' | 'dim' | 'aug';
+
 export type FunctionDef = {
   id: string;
   label: string;
   degree: number;
-  quality: 'maj' | 'min' | 'dim';
+  quality: TriadQuality;
 };
 
 export type DegreeDef = {
@@ -41,3 +43,5 @@ export type RollEvent = {
   start: number;
   duration: number;
 };
+
+export type KeyMode = 'major' | 'minor' | 'harmonicMinor';

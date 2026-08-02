@@ -10,36 +10,36 @@ export function HomePage() {
         Stay in the browser.
       </Title>
       <Body>
-        Intervals, chords, scales, and in-key hearing. No accounts. No tracking. Audio stays on
-        your device.
+        Full vocabularies on every prompt — every interval, chord, scale, or degree is always
+        available. No accounts. No tracking. Audio stays on your device.
       </Body>
 
       <p className="section">Vocabulary</p>
       <CardButton
         title="Intervals"
-        subtitle="Unison through octave. Pure audio, then piano-roll confirm."
+        subtitle="Unison through double octave, ascending or descending. All qualities every time."
         to="/intervals"
       />
       <CardButton
         title="Chords"
-        subtitle="Triads and sevenths. Block chord first, arpeggio after answer."
+        subtitle="Triads, sus, sixths, sevenths, and ninths. Full quality list on every prompt."
         to="/chords"
       />
       <CardButton
         title="Scales"
-        subtitle="Modes, minors, pentatonics, blues. Ascend once from the root."
+        subtitle="Modes, minors, pentatonics, blues, symmetrical, chromatic. Every scale listed."
         to="/scales"
       />
 
       <p className="section">In a Key</p>
       <CardButton
         title="Chords in Key"
-        subtitle="Chain through diatonic triad functions in major or natural minor."
+        subtitle="Diatonic triad functions in major, natural minor, or harmonic minor."
         to="/in-key/chords"
       />
       <CardButton
         title="Notes in Key"
-        subtitle="Chain through scale degrees inside one octave."
+        subtitle="All 12 chromatic degrees relative to the tonic — every degree always choosable."
         to="/in-key/notes"
       />
 

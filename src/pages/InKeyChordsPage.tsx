@@ -12,6 +12,8 @@ import {
 } from '../components/ui';
 import { useDrillAudio } from '../hooks/useDrillAudio';
 import {
+  HARMONIC_MINOR_FUNCTIONS,
+  HARMONIC_MINOR_SCALE,
   MAJOR_FUNCTIONS,
   MAJOR_SCALE,
   MINOR_FUNCTIONS,
@@ -20,15 +22,14 @@ import {
 } from '../theory/catalog';
 import { keyLabel } from '../theory/keys';
 import { pickRandom, randomInt } from '../theory/pitch';
-import type { FunctionDef, RollEvent } from '../theory/types';
+import type { FunctionDef, KeyMode, RollEvent } from '../theory/types';
 
-type Mode = 'major' | 'minor';
 type Phase = 'prompt' | 'answered';
 
 const CHAIN_LEN = 6;
 
 type Session = {
-  mode: Mode;
+  mode: KeyMode;
   tonic: number;
   functions: FunctionDef[];
   scale: readonly number[];
@@ -39,13 +40,25 @@ type Step = {
   notes: number[];
 };
 
+function functionsFor(mode: KeyMode): FunctionDef[] {
+  if (mode === 'major') return MAJOR_FUNCTIONS;
+  if (mode === 'harmonicMinor') return HARMONIC_MINOR_FUNCTIONS;
+  return MINOR_FUNCTIONS;
+}
+
+function scaleFor(mode: KeyMode): readonly number[] {
+  if (mode === 'major') return MAJOR_SCALE;
+  if (mode === 'harmonicMinor') return HARMONIC_MINOR_SCALE;
+  return NATURAL_MINOR_SCALE;
+}
+
 function buildSession(): Session {
-  const mode: Mode = pickRandom(['major', 'minor'] as const);
+  const mode: KeyMode = pickRandom(['major', 'minor', 'harmonicMinor'] as const);
   return {
     mode,
     tonic: randomInt(48, 58),
-    functions: mode === 'major' ? MAJOR_FUNCTIONS : MINOR_FUNCTIONS,
-    scale: mode === 'major' ? MAJOR_SCALE : NATURAL_MINOR_SCALE,
+    functions: functionsFor(mode),
+    scale: scaleFor(mode),
   };
 }
 

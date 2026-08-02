@@ -11,28 +11,25 @@ import {
   StatusPill,
 } from '../components/ui';
 import { useDrillAudio } from '../hooks/useDrillAudio';
-import { MAJOR_DEGREES, MINOR_DEGREES } from '../theory/catalog';
+import { CHROMATIC_DEGREES } from '../theory/catalog';
 import { keyLabel } from '../theory/keys';
 import { pickRandom, randomInt } from '../theory/pitch';
-import type { DegreeDef, RollEvent } from '../theory/types';
+import type { DegreeDef, KeyMode, RollEvent } from '../theory/types';
 
-type Mode = 'major' | 'minor';
 type Phase = 'prompt' | 'answered';
 
 const CHAIN_LEN = 8;
 
 type Session = {
-  mode: Mode;
+  mode: KeyMode;
   tonic: number;
-  degrees: DegreeDef[];
 };
 
 function buildSession(): Session {
-  const mode: Mode = pickRandom(['major', 'minor'] as const);
+  const mode: KeyMode = pickRandom(['major', 'minor', 'harmonicMinor'] as const);
   return {
     mode,
     tonic: randomInt(55, 67),
-    degrees: mode === 'major' ? MAJOR_DEGREES : MINOR_DEGREES,
   };
 }
 
@@ -40,8 +37,8 @@ function midiFor(session: Session, degree: DegreeDef) {
   return session.tonic + degree.semitone;
 }
 
-function nextDegree(session: Session, currentId: string): DegreeDef {
-  const options = session.degrees.filter((item) => item.id !== currentId);
+function nextDegree(currentId: string): DegreeDef {
+  const options = CHROMATIC_DEGREES.filter((item) => item.id !== currentId);
   return pickRandom(options);
 }
 
@@ -60,8 +57,8 @@ export function InKeyNotesPage() {
   const startChain = useCallback(async () => {
     const gen = ++genRef.current;
     const active = buildSession();
-    const home = active.degrees[0];
-    const next = nextDegree(active, home.id);
+    const home = CHROMATIC_DEGREES[0];
+    const next = nextDegree(home.id);
 
     setSession(active);
     setCurrent(home);
@@ -120,7 +117,7 @@ export function InKeyNotesPage() {
     }
 
     const gen = ++genRef.current;
-    const next = nextDegree(session, target.id);
+    const next = nextDegree(target.id);
     setCurrent(target);
     setTarget(next);
     setPhase('prompt');
@@ -193,7 +190,7 @@ export function InKeyNotesPage() {
       </Panel>
 
       <div className="grid grid--compact">
-        {session.degrees.map((item) => {
+        {CHROMATIC_DEGREES.map((item) => {
           let state: 'idle' | 'correct' | 'wrong' | 'muted' = 'idle';
           if (phase === 'answered' && target) {
             if (item.id === target.id) state = 'correct';

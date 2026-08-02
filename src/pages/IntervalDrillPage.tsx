@@ -19,17 +19,21 @@ type Phase = 'prompt' | 'answered';
 
 type Prompt = {
   answer: IntervalDef;
-  low: number;
-  high: number;
+  first: number;
+  second: number;
 };
 
 function makePrompt(): Prompt {
   const answer = pickRandom(INTERVALS);
-  const low = randomRootMidi(48, 67);
+  // Keep compound intervals in a singable register.
+  const lowMax = answer.semitones >= 13 ? 55 : 67;
+  const low = randomRootMidi(48, lowMax);
+  const high = low + answer.semitones;
+  const ascending = answer.semitones === 0 || Math.random() < 0.5;
   return {
     answer,
-    low,
-    high: low + answer.semitones,
+    first: ascending ? low : high,
+    second: ascending ? high : low,
   };
 }
 
@@ -41,7 +45,7 @@ export function IntervalDrillPage() {
   const [roll, setRoll] = useState<RollEvent[]>([]);
 
   const playPrompt = useCallback(async (current: Prompt) => {
-    await synth.playNotes([current.low, current.high], 0.55, 0.12);
+    await synth.playNotes([current.first, current.second], 0.55, 0.12);
   }, []);
 
   useEffect(() => {
@@ -53,7 +57,7 @@ export function IntervalDrillPage() {
     if (phase === 'answered') return;
     setSelectedId(choice.id);
     setPhase('answered');
-    setRoll(melodyToRoll([prompt.low, prompt.high], 0.55, 0.12));
+    setRoll(melodyToRoll([prompt.first, prompt.second], 0.55, 0.12));
   };
 
   const next = () => {

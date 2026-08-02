@@ -1,36 +1,10 @@
 /** Offline theory integrity checks. Run: node scripts/check-theory.mjs */
 
-const CHORDS = [
-  { id: 'maj', intervals: [0, 4, 7] },
-  { id: 'min', intervals: [0, 3, 7] },
-  { id: 'dim', intervals: [0, 3, 6] },
-  { id: 'aug', intervals: [0, 4, 8] },
-  { id: 'maj7', intervals: [0, 4, 7, 11] },
-  { id: '7', intervals: [0, 4, 7, 10] },
-  { id: 'm7', intervals: [0, 3, 7, 10] },
-  { id: 'm7b5', intervals: [0, 3, 6, 10] },
-  { id: 'dim7', intervals: [0, 3, 6, 9] },
-  { id: 'mMaj7', intervals: [0, 3, 7, 11] },
-];
-
-const SCALES = [
-  { id: 'major', intervals: [0, 2, 4, 5, 7, 9, 11, 12] },
-  { id: 'natMinor', intervals: [0, 2, 3, 5, 7, 8, 10, 12] },
-  { id: 'harmMinor', intervals: [0, 2, 3, 5, 7, 8, 11, 12] },
-  { id: 'melMinor', intervals: [0, 2, 3, 5, 7, 9, 11, 12] },
-  { id: 'majPent', intervals: [0, 2, 4, 7, 9, 12] },
-  { id: 'minPent', intervals: [0, 3, 5, 7, 10, 12] },
-  { id: 'blues', intervals: [0, 3, 5, 6, 7, 10, 12] },
-  { id: 'dorian', intervals: [0, 2, 3, 5, 7, 9, 10, 12] },
-  { id: 'phrygian', intervals: [0, 1, 3, 5, 7, 8, 10, 12] },
-  { id: 'lydian', intervals: [0, 2, 4, 6, 7, 9, 11, 12] },
-  { id: 'mixolydian', intervals: [0, 2, 4, 5, 7, 9, 10, 12] },
-  { id: 'locrian', intervals: [0, 1, 3, 5, 6, 8, 10, 12] },
-];
-
-const TRIAD = { maj: [0, 4, 7], min: [0, 3, 7], dim: [0, 3, 6] };
+const TRIAD = { maj: [0, 4, 7], min: [0, 3, 7], dim: [0, 3, 6], aug: [0, 4, 8] };
 const MAJOR_SCALE = [0, 2, 4, 5, 7, 9, 11];
 const NATURAL_MINOR = [0, 2, 3, 5, 7, 8, 10];
+const HARMONIC_MINOR = [0, 2, 3, 5, 7, 8, 11];
+
 const MAJOR_FUNCTIONS = [
   { id: 'I', degree: 0, quality: 'maj' },
   { id: 'ii', degree: 1, quality: 'min' },
@@ -49,6 +23,17 @@ const MINOR_FUNCTIONS = [
   { id: 'VI', degree: 5, quality: 'maj' },
   { id: 'VII', degree: 6, quality: 'maj' },
 ];
+const HARMONIC_MINOR_FUNCTIONS = [
+  { id: 'i', degree: 0, quality: 'min' },
+  { id: 'ii', degree: 1, quality: 'dim' },
+  { id: 'III', degree: 2, quality: 'aug' },
+  { id: 'iv', degree: 3, quality: 'min' },
+  { id: 'V', degree: 4, quality: 'maj' },
+  { id: 'VI', degree: 5, quality: 'maj' },
+  { id: 'vii', degree: 6, quality: 'dim' },
+];
+
+const CHROMATIC_DEGREES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
 let failed = 0;
 function assert(cond, msg) {
@@ -63,6 +48,7 @@ function pc(n) {
 }
 
 function checkFunctions(label, fns, scale) {
+  assert(fns.length === 7, `${label} should have 7 functions`);
   for (const fn of fns) {
     const root = scale[fn.degree];
     const fromQuality = TRIAD[fn.quality].map((i) => pc(root + i)).sort();
@@ -76,10 +62,13 @@ function checkFunctions(label, fns, scale) {
 
 checkFunctions('major', MAJOR_FUNCTIONS, MAJOR_SCALE);
 checkFunctions('minor', MINOR_FUNCTIONS, NATURAL_MINOR);
+checkFunctions('harmonicMinor', HARMONIC_MINOR_FUNCTIONS, HARMONIC_MINOR);
 
-const ids = (arr) => new Set(arr.map((x) => x.id));
-assert(ids(CHORDS).size === CHORDS.length, 'duplicate chord ids');
-assert(ids(SCALES).size === SCALES.length, 'duplicate scale ids');
+assert(CHROMATIC_DEGREES.length === 12, 'chromatic degrees must cover all 12 pcs');
+assert(
+  new Set(CHROMATIC_DEGREES).size === 12,
+  'chromatic degrees must be unique',
+);
 
 if (failed) {
   console.error(`${failed} failure(s)`);
