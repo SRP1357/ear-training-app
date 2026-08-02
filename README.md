@@ -1,4 +1,4 @@
-# Ear Lab
+# Ear Training
 
 A free, local-only ear training site for musicians.
 

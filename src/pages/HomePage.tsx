@@ -3,12 +3,8 @@ import { Body, CardButton, Eyebrow, Screen, Title } from '../components/ui';
 export function HomePage() {
   return (
     <Screen home>
-      <Eyebrow>Ear Lab // Local Unit</Eyebrow>
-      <Title>
-        Train the ear.
-        <br />
-        Stay in the browser.
-      </Title>
+      <Eyebrow>Local only</Eyebrow>
+      <Title>Ear training</Title>
       <Body>
         Full vocabularies on every prompt — every option in that mode is always available. No
         accounts. No tracking. Audio stays on your device.

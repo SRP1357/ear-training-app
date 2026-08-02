@@ -11,7 +11,7 @@ import { synth } from '../audio/synth';
 import { TIMBRES } from '../theory/catalog';
 import type { Timbre } from '../theory/types';
 
-const STORAGE_KEY = 'earlab.settings.v1';
+const STORAGE_KEY = 'ear-training.settings.v1';
 const TIMBRE_IDS = new Set(TIMBRES.map((t) => t.id));
 
 type Settings = {
