@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { SITE_URL, type PageSeo } from './site';
 
-function upsertMeta(attr: 'name' | 'property', key: string, content: string) {
-  let el = document.head.querySelector(`meta[${attr}="${key}"]`);
+function upsertMeta(name: string, content: string) {
+  let el = document.head.querySelector(`meta[name="${name}"]`);
   if (!el) {
     el = document.createElement('meta');
-    el.setAttribute(attr, key);
+    el.setAttribute('name', name);
     document.head.appendChild(el);
   }
   el.setAttribute('content', content);
@@ -21,17 +21,12 @@ function upsertLink(rel: string, href: string) {
   el.setAttribute('href', href);
 }
 
-/** Updates document title + social/description tags for the active route. */
+/** Updates document title, description, and canonical URL for the active route. */
 export function Seo({ title, description, path }: PageSeo) {
   useEffect(() => {
     const url = path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
     document.title = title;
-    upsertMeta('name', 'description', description);
-    upsertMeta('property', 'og:title', title);
-    upsertMeta('property', 'og:description', description);
-    upsertMeta('property', 'og:url', url);
-    upsertMeta('name', 'twitter:title', title);
-    upsertMeta('name', 'twitter:description', description);
+    upsertMeta('description', description);
     upsertLink('canonical', url);
   }, [title, description, path]);
 
