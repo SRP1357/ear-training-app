@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   createContext,
   useCallback,
@@ -40,36 +39,32 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [timbre, setTimbreState] = useState<Timbre>(defaults.timbre);
 
   useEffect(() => {
-    let alive = true;
-    (async () => {
-      try {
-        const raw = await AsyncStorage.getItem(STORAGE_KEY);
-        if (raw && alive) {
-          const parsed = JSON.parse(raw) as Partial<Settings>;
-          const next = isTimbre(parsed.timbre) ? parsed.timbre : defaults.timbre;
-          setTimbreState(next);
-          synth.setTimbre(next);
-        } else {
-          synth.setTimbre(defaults.timbre);
-        }
-      } catch {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as Partial<Settings>;
+        const next = isTimbre(parsed.timbre) ? parsed.timbre : defaults.timbre;
+        setTimbreState(next);
+        synth.setTimbre(next);
+      } else {
         synth.setTimbre(defaults.timbre);
-      } finally {
-        if (alive) setReady(true);
       }
-    })();
-    return () => {
-      alive = false;
-    };
+    } catch {
+      synth.setTimbre(defaults.timbre);
+    } finally {
+      setReady(true);
+    }
   }, []);
 
   const setTimbre = useCallback((next: Timbre) => {
     if (!isTimbre(next)) return;
     setTimbreState(next);
     synth.setTimbre(next);
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({ timbre: next })).catch(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ timbre: next }));
+    } catch {
       // Local-only preference; ignore persistence failures.
-    });
+    }
   }, []);
 
   const value = useMemo(

@@ -1,23 +1,19 @@
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback, useRef, useState } from 'react';
-import { Platform } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { synth } from '../audio/synth';
 
 /**
- * Manages drill autoplay + web audio unlock.
- * On web, first prompt waits for a user gesture (browser autoplay policy).
+ * Manages drill autoplay + browser audio unlock.
+ * First prompt waits for a user gesture (autoplay policy).
  */
 export function useDrillAudio() {
-  const [needsUnlock, setNeedsUnlock] = useState(Platform.OS === 'web');
-  const unlockedRef = useRef(Platform.OS !== 'web');
+  const [needsUnlock, setNeedsUnlock] = useState(true);
+  const unlockedRef = useRef(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        synth.stopAll();
-      };
-    }, []),
-  );
+  useEffect(() => {
+    return () => {
+      synth.stopAll();
+    };
+  }, []);
 
   const unlock = useCallback(async () => {
     await synth.unlock();

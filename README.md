@@ -1,8 +1,10 @@
 # Ear Lab
 
-A free, local-only ear training app for musicians.
+A free, local-only ear training site for musicians.
 
-No accounts. No ads. No analytics. Nothing leaves the device.
+No accounts. No ads. No analytics. Audio stays in your browser.
+
+**Live:** https://SRP1357.github.io/ear-training-app/
 
 ## Modes
 
@@ -15,30 +17,21 @@ No accounts. No ads. No analytics. Nothing leaves the device.
 - Chords: chain through diatonic triad functions (major / natural minor)
 - Notes: chain through scale degrees inside one octave
 
-**Tuner**
-- Chromatic tuner (voice/instrument) — microphone processed on-device only
-
 ## Stack
 
-- Expo (React Native) + TypeScript
-- `react-native-audio-api` synth engine (sine / triangle / saw / square)
-- Local settings via AsyncStorage
+- Vite + React + TypeScript
+- Web Audio API synth (sine / triangle / saw / square)
+- Settings in `localStorage`
 
-## Run
-
-### Easiest (no Android Studio / no Mac): Web
+## Develop
 
 ```bash
 npm install
-npx expo start --web
+npm run dev
 ```
 
-Open the local URL in Chrome. Synth audio works in the browser via Web Audio.
+## Deploy
 
-### Native phone build (optional later)
+Pushes to `main` build and publish to GitHub Pages via `.github/workflows/deploy.yml`.
 
-Audio uses native modules, so **Expo Go will not work**.
-
-- Android with local tooling: `npx expo run:android` (needs Android Studio)
-- iOS: `npx expo run:ios` (needs a Mac + Xcode)
-- Or use **EAS Build** in the cloud, then install the APK on an Android phone — no Android Studio required on your PC
+One-time setup in the repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.

@@ -1,5 +1,3 @@
-import { Platform } from 'react-native';
-import { AudioContext, AudioManager, GainNode, OscillatorNode } from 'react-native-audio-api';
 import { midiToFreq } from '../theory/pitch';
 import type { RollEvent, Timbre } from '../theory/types';
 
@@ -28,20 +26,6 @@ class SynthEngine {
   private playGen = 0;
 
   async ensure(): Promise<AudioContext> {
-    if (Platform.OS !== 'web') {
-      try {
-        // Restore playback session after tuner (playAndRecord / measurement).
-        AudioManager.setAudioSessionOptions({
-          iosCategory: 'playback',
-          iosMode: 'default',
-          iosOptions: [],
-        });
-        await AudioManager.setAudioSessionActivity(true);
-      } catch {
-        // Non-fatal: Web Audio path may still work.
-      }
-    }
-
     if (!this.ctx) {
       this.ctx = new AudioContext();
     }
@@ -51,7 +35,7 @@ class SynthEngine {
     return this.ctx;
   }
 
-  /** Call from a user gesture on web before auto-playing drills. */
+  /** Call from a user gesture before auto-playing drills. */
   async unlock() {
     await this.ensure();
   }

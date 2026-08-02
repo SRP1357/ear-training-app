@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { chordToRoll, synth } from '../audio/synth';
 import { PianoRoll } from '../components/PianoRoll';
 import {
   ChoiceButton,
   GhostButton,
+  PageHeader,
   Panel,
   PrimaryButton,
   Screen,
@@ -21,8 +21,6 @@ import {
 import { keyLabel } from '../theory/keys';
 import { pickRandom, randomInt } from '../theory/pitch';
 import type { FunctionDef, RollEvent } from '../theory/types';
-import { colors } from '../theme/colors';
-import { fonts } from '../theme/typography';
 
 type Mode = 'major' | 'minor';
 type Phase = 'prompt' | 'answered';
@@ -61,7 +59,7 @@ function nextFunction(session: Session, currentId: string): FunctionDef {
   return pickRandom(options);
 }
 
-export function InKeyChordsScreen() {
+export function InKeyChordsPage() {
   const { needsUnlock, unlock, canAutoplay } = useDrillAudio();
   const genRef = useRef(0);
   const [session, setSession] = useState<Session>(() => buildSession());
@@ -166,91 +164,68 @@ export function InKeyChordsScreen() {
   }, [phase, selectedId, target]);
 
   return (
-    <Screen style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Panel>
-          <Text style={styles.meta}>
-            {keyLabel(session.tonic, session.mode)}  ·  chain {CHAIN_LEN - chainLeft + 1}/
-            {CHAIN_LEN}
-          </Text>
-          <View style={styles.row}>
-            {status === 'correct' ? <StatusPill tone="success" label="Correct" /> : null}
-            {status === 'wrong' ? <StatusPill tone="danger" label="Incorrect" /> : null}
-            {phase === 'prompt' ? <StatusPill tone="neutral" label="Name the function" /> : null}
-          </View>
-          <View style={styles.rollWrap}>
-            <PianoRoll
-              events={phase === 'answered' ? roll : []}
-              label={
-                phase === 'answered' && target && current
-                  ? `${target.fn.label}  ·  from ${current.fn.label}`
-                  : undefined
-              }
-            />
-          </View>
-          <View style={styles.actions}>
-            {needsUnlock ? (
-              <PrimaryButton
-                label="Tap to enable audio"
-                onPress={() => {
-                  void unlock().then(() => startChain());
-                }}
-              />
-            ) : (
-              <>
-                <GhostButton label="Replay target" onPress={() => void playTarget()} />
-                <GhostButton label="Current → target" onPress={() => void playCompare()} />
-                <GhostButton label="Play home" onPress={() => void playHome()} />
-              </>
-            )}
-            {phase === 'answered' ? (
-              <PrimaryButton
-                label={status === 'correct' && chainLeft > 1 ? 'Continue chain' : 'New chain'}
-                onPress={continueChain}
-              />
-            ) : null}
-          </View>
-        </Panel>
-
-        <View style={styles.grid}>
-          {session.functions.map((item) => {
-            let state: 'idle' | 'correct' | 'wrong' | 'muted' = 'idle';
-            if (phase === 'answered' && target) {
-              if (item.id === target.fn.id) state = 'correct';
-              else if (item.id === selectedId) state = 'wrong';
-              else state = 'muted';
+    <Screen>
+      <PageHeader title="In Key / Chords" />
+      <Panel>
+        <p className="meta">
+          {keyLabel(session.tonic, session.mode)} · chain {CHAIN_LEN - chainLeft + 1}/{CHAIN_LEN}
+        </p>
+        {status === 'correct' ? <StatusPill tone="success" label="Correct" /> : null}
+        {status === 'wrong' ? <StatusPill tone="danger" label="Incorrect" /> : null}
+        {phase === 'prompt' ? <StatusPill tone="neutral" label="Name the function" /> : null}
+        <div className="roll-wrap">
+          <PianoRoll
+            events={phase === 'answered' ? roll : []}
+            label={
+              phase === 'answered' && target && current
+                ? `${target.fn.label}  ·  from ${current.fn.label}`
+                : undefined
             }
-            return (
-              <View key={item.id} style={styles.cell}>
-                <ChoiceButton
-                  label={item.label}
-                  state={state}
-                  disabled={phase === 'answered' || needsUnlock}
-                  onPress={() => onAnswer(item)}
-                />
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
+          />
+        </div>
+        <div className="actions">
+          {needsUnlock ? (
+            <PrimaryButton
+              label="Tap to enable audio"
+              onClick={() => {
+                void unlock().then(() => startChain());
+              }}
+            />
+          ) : (
+            <>
+              <GhostButton label="Replay target" onClick={() => void playTarget()} />
+              <GhostButton label="Current → target" onClick={() => void playCompare()} />
+              <GhostButton label="Play home" onClick={() => void playHome()} />
+            </>
+          )}
+          {phase === 'answered' ? (
+            <PrimaryButton
+              label={status === 'correct' && chainLeft > 1 ? 'Continue chain' : 'New chain'}
+              onClick={continueChain}
+            />
+          ) : null}
+        </div>
+      </Panel>
+
+      <div className="grid grid--compact">
+        {session.functions.map((item) => {
+          let state: 'idle' | 'correct' | 'wrong' | 'muted' = 'idle';
+          if (phase === 'answered' && target) {
+            if (item.id === target.fn.id) state = 'correct';
+            else if (item.id === selectedId) state = 'wrong';
+            else state = 'muted';
+          }
+          return (
+            <ChoiceButton
+              key={item.id}
+              label={item.label}
+              state={state}
+              disabled={phase === 'answered' || needsUnlock}
+              onClick={() => onAnswer(item)}
+            />
+          );
+        })}
+      </div>
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: { paddingTop: 0 },
-  content: { paddingBottom: 28 },
-  meta: {
-    fontFamily: fonts.mono,
-    fontSize: 11,
-    letterSpacing: 1.1,
-    textTransform: 'uppercase',
-    color: colors.inkFaint,
-    marginBottom: 10,
-  },
-  row: { marginBottom: 12 },
-  rollWrap: { marginBottom: 12 },
-  actions: { gap: 8 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  cell: { width: '22%', flexGrow: 1, minWidth: 64 },
-});
