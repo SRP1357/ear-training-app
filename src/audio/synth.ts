@@ -40,6 +40,11 @@ class SynthEngine {
     await this.ensure();
   }
 
+  /** True once the AudioContext exists and is running (survives route changes). */
+  isUnlocked() {
+    return this.ctx !== null && this.ctx.state === 'running';
+  }
+
   setTimbre(timbre: Timbre) {
     this.timbre = timbre;
   }

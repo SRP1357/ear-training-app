@@ -28,6 +28,8 @@ No accounts. No ads. No analytics. Audio stays in your browser.
 ```bash
 npm install
 npm run dev
+npm run check:theory   # offline catalog / diatonic integrity checks
+npm run build && npm run preview
 ```
 
 ## Deploy

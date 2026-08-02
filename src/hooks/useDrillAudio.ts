@@ -3,11 +3,12 @@ import { synth } from '../audio/synth';
 
 /**
  * Manages drill autoplay + browser audio unlock.
- * First prompt waits for a user gesture (autoplay policy).
+ * First gesture unlocks Web Audio; later drills reuse the running context.
  */
 export function useDrillAudio() {
-  const [needsUnlock, setNeedsUnlock] = useState(true);
-  const unlockedRef = useRef(false);
+  const already = synth.isUnlocked();
+  const [needsUnlock, setNeedsUnlock] = useState(!already);
+  const unlockedRef = useRef(already);
 
   useEffect(() => {
     return () => {

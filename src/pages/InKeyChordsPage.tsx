@@ -168,7 +168,9 @@ export function InKeyChordsPage() {
       <PageHeader title="In Key / Chords" />
       <Panel>
         <p className="meta">
-          {keyLabel(session.tonic, session.mode)} · chain {CHAIN_LEN - chainLeft + 1}/{CHAIN_LEN}
+          {ready
+            ? `${keyLabel(session.tonic, session.mode)} · chain ${CHAIN_LEN - chainLeft + 1}/${CHAIN_LEN}`
+            : 'Waiting for audio'}
         </p>
         {status === 'correct' ? <StatusPill tone="success" label="Correct" /> : null}
         {status === 'wrong' ? <StatusPill tone="danger" label="Incorrect" /> : null}
@@ -193,9 +195,17 @@ export function InKeyChordsPage() {
             />
           ) : (
             <>
-              <GhostButton label="Replay target" onClick={() => void playTarget()} />
-              <GhostButton label="Current → target" onClick={() => void playCompare()} />
-              <GhostButton label="Play home" onClick={() => void playHome()} />
+              <GhostButton
+                label="Replay target"
+                onClick={() => void playTarget()}
+                disabled={!target}
+              />
+              <GhostButton
+                label="Current → target"
+                onClick={() => void playCompare()}
+                disabled={!current || !target}
+              />
+              <GhostButton label="Play home" onClick={() => void playHome()} disabled={!ready} />
             </>
           )}
           {phase === 'answered' ? (
@@ -220,7 +230,7 @@ export function InKeyChordsPage() {
               key={item.id}
               label={item.label}
               state={state}
-              disabled={phase === 'answered' || needsUnlock}
+              disabled={phase === 'answered' || needsUnlock || !target}
               onClick={() => onAnswer(item)}
             />
           );
